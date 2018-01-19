@@ -1,0 +1,137 @@
+<HTML>
+    <head>
+        <title> 成大教發中心-報表系統 </title>
+        <meta http-equiv = "Content-Type" content = "text/html; charset = utf-8">
+        <link rel = 'stylesheet' href = 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css'>
+        <link rel = 'stylesheet' href = 'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css'>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script> 
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.js"></script>
+        <script src = "https://www.gstatic.com/firebasejs/4.7.0/firebase.js"></script>
+        <style type = "text/css">
+            #Site {
+                display: flex;
+                min-height: 100vh;
+                flex-direction: column;
+            }
+            .column {
+                max-width: 450px;
+            }
+            body > .grid {
+                height: 100%;
+            }
+        </style>
+    </head>
+    <body id = "Site">
+        <div class = "ui large menu">
+            <a id = 'go_to_input' class = "large item"> 輸入 </a>
+            <a id = 'go_to_edit' class = "large item"> 編輯 </a>
+            <a id = 'go_to_show' class = "large item"> 顯示 </a>
+            <div class = "right menu">
+                <a href = "./" class = "large item" id = "toindex"> 首頁 </a>
+            </div>
+        </div>        
+
+        <div class = "ui inverted active dimmer" id = "load_index">
+            <div class = "ui indeterminate text loader"> 資料處理中 </div>
+        </div>
+
+        <div id = "container" class = "ui middle aligned center aligned grid">
+            <div class = "column" id = "contain_column">
+            </div>
+        </div>
+        <br>
+        <br>
+
+        <div class = "ui inverted vertical footer center aligned segment">
+            <p>&copy; 國立成功大學 教學發展中心 All rights reserved. | Semantic UI</p>
+        </div>
+
+        <div class = "ui modal" id = "login_success">
+            <i class = 'close icon'></i>
+            <div class = "ui icon header">
+                <i class = "checkmark icon"></i>
+                    登入成功
+            </div>
+        </div>
+
+        <div class = "ui modal" id = "login_failed">
+            <i class = 'close icon'></i>
+            <div class = "ui icon header">
+                <i class = "warning sign icon"></i>
+                    登入失敗
+            </div>
+            <div class = "content">
+                帳號或密碼錯誤
+            </div>
+        </div>
+
+        <div class = "ui modal" id = "not_login">
+            <i class = 'close icon'></i>
+            <div class = "ui icon header">
+                <i class = "warning sign icon"></i>
+                    尚未登入
+            </div>
+            <div class = "content">
+                請先登入
+            </div>
+        </div>
+
+        <div class = "ui modal" id = "reg_modal">
+            <i class = 'close icon'></i>
+            <div class = "ui icon header">
+                <i class = "warning sign icon"></i>
+                    註冊
+            </div>
+            <div class = "content">
+                <form id = "reg_form" class = 'ui form'>
+                    <label class = 'ui large label'>帳號</label>
+                    <input type = 'text' id = 'reg_acc' placeholder = 'Account'>
+                    <br>
+                    <label class = 'ui large label'>密碼</label>
+                    <input type = 'password' id = 'reg_pwd' placeholder = 'Password'>
+                </form>
+            </div>
+            <div class = "actions">
+                <div class = "ui basic green ok animated button" id = "reg_ok">
+                    <div class = "visible content">註冊</div>
+                    <div class = "hidden content">
+                        <i class = "add user icon"></i>
+                    </div>
+                </div>
+                <div class = "ui red basic cancel animated button" id = "reg_cancel">
+                    <div class = "visible content">取消</div>
+                    <div class = "hidden content">
+                        <i class = "remove icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class = "ui modal" id = "reg_success">
+            <i class = 'close icon'></i>
+            <div class = "ui icon header">
+                <i class = "checkmark icon"></i>
+                    註冊成功
+            </div>
+        </div>
+
+        <div class = "ui modal" id = "reg_failed">
+            <i class = 'close icon'></i>
+            <div class = "ui icon header">
+                <i class = "warning sign icon"></i>
+                    註冊失敗
+            </div>
+        </div>
+
+        <div class = "ui modal" id = "logout_success">
+            <i class = 'close icon'></i>
+            <div class = "ui icon header">
+                <i class = "checkmark icon"></i>
+                    登出成功
+            </div>
+        </div>
+
+        <script src = "./assets/index.js"></script>
+    </body>
+</HTML>

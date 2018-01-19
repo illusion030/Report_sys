@@ -1,0 +1,180 @@
+<HTML>
+    <head>
+        <title> 成大教發中心-報表系統 </title>
+        <meta http-equiv = "Content-Type" content = "text/html; charset = utf-8">
+        <link rel = 'stylesheet' href = 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css'>
+        <link rel = 'stylesheet' href = 'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css'>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.js"></script>
+        <script src = "https://www.gstatic.com/firebasejs/4.7.0/firebase.js"></script>
+        <style type = "text/css">
+            #Site {
+                display: flex;
+                min-height: 100vh;
+                flex-direction: column;
+            }
+            #container {
+                flex: 1;
+            }
+        </style>
+    </head>
+    <body id = "Site">
+
+        <div class = "ui large menu">
+            <a href = "./report.html" class = "large item"> 輸入 </a>
+            <a href = "./edit.html" class = "large item"> 編輯 </a>
+            <a href = "./show.html" class = "large item"> 顯示 </a>
+            <div class = "ui selection dropdown item" id = "year_drop">
+                <input type = "hidden" id = "year">
+                <i class = "dropdown icon"></i>
+                <div class = "default text">年度</div>
+                <div class = "menu" id = "year_menu">
+                </div>
+            </div>
+            <div class = "ui selection dropdown item" id = "number_drop">
+                <input type = "hidden" id = "number">
+                <i class = "dropdown icon"></i>
+                <div class = "default text">會編</div>
+                <div class = "menu" id = "number_menu">
+                </div>
+            </div>
+            <div class = "right menu">
+                <a href = "./" class = "large item" id = "toindex"> 首頁 </a>
+            </div>
+        </div>
+
+        <div class = "ui inverted active dimmer" id = "load_edit">
+            <div class = "ui indeterminate text loader"> 資料處理中 </div>
+        </div>
+        
+        <div id = "container">
+            <div class = "ui grid">
+                <div class = "four wide column" id = "show_select">
+                    <div class = "ui segment" id = "not_filled_seg">
+                        <div class = "ui top left attached large label">
+                            未填妥項目
+                        </div>
+                        <div class = "ui slider checkbox" id = "not_filled_cb">
+                            <input type = "checkbox">
+                            <label>只顯示未填妥項目</label>
+                        </div>
+                    </div>
+                    <div class = "ui segment" id = "date_seg">
+                        <div class = "ui top left attached large label">
+                            設定日期範圍
+                        </div>
+                        <form id = "date_form" class = "ui form">
+                            <div class = "field">
+                                <label class = "ui large label"> 開始日期: </label>
+                                <input type = "text" id = "start_date" placeholder = "start date" readonly>
+                            </div>
+                            <div class = "field">
+                                <label class = "ui large label"> 結束日期: </label>
+                                <input type = "text" id = "end_date" placeholder = "end date" readonly>
+                            </div>
+                            <div class = "ui fluid blue basic animated vertical button" id = "clr_btn"> 
+                                <div class = "visible content">清空</div>
+                                <div class = "hidden content">
+                                    <i class = "refresh icon"></i>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class = 'ui segment' id = 'use_seg'></div>
+                </div>
+                <div class = "eleven wide column">
+                    <table id = "report_table" border="1" class = "ui celled striped table" >
+                        <thead>
+                            <tr class = "center aligned">
+                                <th class = "single line"> 建檔日期 </th>
+                                <th class = "single line"> 請購編號 </th>
+                                <th> 實施主軸 </th>
+                                <th class = "single line"> 請購類別 </th>
+                                <th> 請購項目 </th>
+                                <th class = "single line"> 請購金額 </th>
+                                <th class = "single line"> 傳票號碼 </th>
+                                <th class = "single line"> 刪除 </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class = "ui fluid large buttons">
+                        <div class = "ui blue basic animated vertical button" id = "edit_save">
+                            <div class = "visible content">存檔</div>
+                            <div class = "hidden content">
+                                <i class = "save icon"></i>
+                            </div>
+                        </div>
+                        <div class = "ui green basic animated vertical button" id = "edit_refresh">
+                            <div class = "visible content">復原</div>
+                            <div class = "hidden content">
+                                <i class = "undo icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+        </div>
+
+        <div class = "ui inverted vertical footer center aligned segment">
+            <p>&copy; 國立成功大學 教學發展中心 All rights reserved. | Semantic UI</p>
+        </div>
+        
+        <!-- modal
+        ============================-->
+
+        <div class = "ui modal" id = "check_edit">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "edit icon"></i>
+                確定存檔?
+            </div>
+            <div class = "large content">
+                <p>請確認資料正確，存檔後無法復原。</p>
+            </div>
+            <div class = "actions">
+                <div class = "ui large green basic animated vertical ok button">
+                    <div class = "visible content"> 是 </div>
+                    <div class = "hidden content">
+                        <i class = "checkmark icon"></i>
+                    </div>
+                </div>
+                <div class = "ui large red basic animated vertical cancel button">
+                    <div class = "visible content"> 否 </div>
+                    <div class = "hidden content">
+                        <i class = "remove icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class = "ui modal" id = "success">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "checkmark icon"></i>
+                存檔成功
+            </div>
+        </div>
+        
+        <div class = "ui modal" id = "failed">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "warning sign icon"></i>
+                存檔失敗
+            </div>
+        </div>
+        
+        <div class = "ui modal" id = "no_change">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "info icon"></i>
+                沒有資料需要更新
+            </div>
+        </div>
+        <script src = "./assets/edit.js"></script>
+    </body>
+</HTML>

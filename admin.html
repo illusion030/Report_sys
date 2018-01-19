@@ -1,0 +1,123 @@
+<HTML>
+    <head>
+        <title> 成大教發中心-報表系統 </title>
+        <meta http-equiv = "Content-Type" content = "text/html; charset = utf-8">
+        <link rel = 'stylesheet' href = 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css'>
+        <link rel = 'stylesheet' href = 'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css'>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.js"></script>
+        <script src = "https://www.gstatic.com/firebasejs/4.7.0/firebase.js"></script>
+        <style type = "text/css">
+            #Site {
+                display: flex;
+                min-height: 100vh;
+                flex-direction: column;
+            }
+            #container {
+                flex: 1;
+            }
+        </style>
+    </head>
+    <body id = "Site">
+
+        <div class = "ui large menu">
+            <a href = "./report.html" class = "large item"> 輸入 </a>
+            <a href = "./edit.html" class = "large item"> 編輯 </a>
+            <a href = "./show.html" class = "large item"> 顯示 </a>
+            <div class = "right menu">
+                <a href = "./" class = "large item" id = "toindex"> 首頁 </a>
+            </div>
+        </div>
+
+        <div class = "ui inverted active dimmer" id = "load_admin">
+            <div class = "ui indeterminate text loader"> 資料處理中 </div>
+        </div>
+        
+        <div id = "container" class = "ui text container">
+            <table id = "account_table" border="1" class = "ui celled striped table" >
+                <thead>
+                    <tr>
+                        <th> 編號 </th>
+                        <th> 帳號 </th>
+                        <th> 是否為管理員 </th>
+                        <th> 刪除 </th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class = "ui fluid large buttons">
+                <div id = "edit_save" class = "medium ui blue basic animated vertical button">
+                    <div class = "visible content"> 存檔 </div>
+                    <div class = "hidden content">
+                        <i class = "save icon"></i>
+                    </div>
+                </div>
+                <div id = "edit_refresh" class = "medium ui green basic animated vertical button">
+                    <div class = "visible content"> 復原 </div>
+                    <div class = "hidden content">
+                        <i class = "undo icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class = "ui inverted vertical footer center aligned segment">
+            <p>&copy; 國立成功大學 教學發展中心 All rights reserved. | Semantic UI</p>
+        </div>
+
+        <!-- modal
+        ============================-->
+
+        <div class = "ui modal" id = "check_edit">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "edit icon"></i>
+                確定存檔?
+            </div>
+            <div class = "large content">
+                <p>請確認資料正確，存檔後無法復原。</p>
+            </div>
+            <div class = "actions">
+                <div class = "ui large green basic animated vertical ok button">
+                    <div class = "visible content"> 是 </div>
+                    <div class = "hidden content">
+                        <i class = "checkmark icon"></i>
+                    </div>
+                </div>
+                <div class = "ui large red cancel animated vertical button">
+                    <div class = "visible content"> 否 </div>
+                    <div class = "hidden content">
+                        <i class = "remove icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class = "ui modal" id = "success">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "checkmark icon"></i>
+                存檔成功
+            </div>
+        </div>
+        
+        <div class = "ui modal" id = "failed">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "warning sign icon"></i>
+                存檔失敗
+            </div>
+        </div>
+        
+        <div class = "ui modal" id = "no_change">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "info icon"></i>
+                沒有資料需要更新
+            </div>
+        </div>
+        <script src = "./assets/admin.js"></script>
+    </body>
+</HTML>

@@ -1,0 +1,499 @@
+<HTML>
+    <head>
+        <title> 成大教發中心-報表系統 </title>
+        <meta http-equiv = "Content-Type" content = "text/html; charset = utf-8">
+        <link rel = 'stylesheet' href = 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css'>
+        <link rel = 'stylesheet' href = 'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css'>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.js"></script>
+        <script src = "https://www.gstatic.com/firebasejs/4.7.0/firebase.js"></script>
+        <style type = "text/css">
+            #Site {
+                display: flex;
+                min-height: 100vh;
+                flex-direction: column;
+            }
+            #contain {
+                flex: 1;
+            }
+        </style>
+    </head>
+    <body id = "Site">
+        
+        <div class = "ui large menu" id = "navmenu">
+            <a href = "./report.html" class = "large item"> 輸入 </a>
+            <a href = "./edit.html" class = "large item"> 編輯 </a>
+            <a href = "./show.html" class = "large item"> 顯示 </a>
+            <div class = "right menu">
+                <a href = "./" class = "large item" id = "toindex"> 首頁 </a>
+            </div>
+        </div>
+        
+        <div class = "ui inverted active dimmer" id = "load_report">
+            <div class = "ui indeterminate text loader"> 資料處理中 </div>
+        </div>
+        
+        <div id = "contain" class = "ui text container">
+            <form id = "report_form" class = "ui form">
+                <div class = "field">
+                    <label class = "ui large label"> 建檔日期: </label>
+                    <input type = "text" id = "report_date" readonly>
+                </div>
+                <div class = "field">
+                    <label class = "ui large label"> 請購編號: </label>
+                    <input type = "text" id = "buy_num" placeholder = "Type here ...">
+                </div>
+                <div class = "field">
+                    <label class = "ui large label"> 年度: </label>
+                    <div class = "ui grid">
+                        <div class = "thirteen wide column">
+                            <div class = "ui fluid selection dropdown" id = "year_title">
+                                <input type = "hidden" id = "year">
+                                <i class = "dropdown icon"></i>
+                                <div class = "default text"> Select </div>
+                                <div class = "menu" id = "year_menu">
+                                </div>
+                            </div>
+                        </div>
+                        <div class = "three wide right aligned column">
+                            <div class = "ui medium blue basic animated button" id = "edit_year"> 
+                                <div class = "visible content">修改</div>
+                                <div class = "hidden content">
+                                    <i class = "large edit icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class = "field">
+                    <label class = "ui large label"> 會編: </label>
+                    <div class = "ui grid">
+                        <div class = "thirteen wide column">
+                            <div class = "ui fluid selection dropdown" id = "number_title">
+                                <input type = "hidden" id = "number">
+                                <i class = "dropdown icon"></i>
+                                <div class = "default text"> Select </div>
+                                <div class = "menu" id = "number_menu">
+                                </div>
+                            </div>
+                        </div>
+                        <div class = "three wide right aligned column">
+                            <div class = "ui medium blue basic animated button" id = "edit_number"> 
+                                <div class = "visible content">修改</div>
+                                <div class = "hidden content">
+                                    <i class = "large edit icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class = "field">
+                    <label class = "ui large label"> 實施主軸: </label>
+                    <div class = "ui grid">
+                        <div class = "thirteen wide column">
+                            <div class = "ui fluid selection dropdown" id = "use_title">
+                                <input type = "hidden" id = "use">
+                                <i class = "dropdown icon"></i>
+                                <div class = "default text"> Select </div>
+                                <div class = "menu" id = "use_menu">
+                                </div>
+                            </div>
+                        </div>
+                        <div class = "three wide right aligned column">
+                            <div class = "ui medium blue basic animated button" id = "edit_use"> 
+                                <div class = "visible content">修改</div>
+                                <div class = "hidden content">
+                                    <i class = "large edit icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class = "field">
+                    <label class = "ui large label"> 請購類別: </label>
+                    <div class = "ui grid">
+                        <div class = "thirteen wide column">
+                            <div class = "ui fluid selection dropdown" id = "buy_type">
+                                <input type = "hidden" id = "buy">
+                                <i class = "dropdown icon"></i>
+                                <div class = "default text"> Select </div>
+                                <div class = "menu" id = "buy_menu">
+                                </div>
+                            </div>
+                        </div>
+                        <div class = "three wide right aligned column">
+                            <div class = "ui medium blue basic animated button" id = "edit_buy"> 
+                                <div class = "visible content">修改</div>
+                                <div class = "hidden content">
+                                    <i class = "large edit icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class = "field">
+                    <label class = "ui large label"> 請購項目: </label>
+                    <input type = "text" id = "buy_name" placeholder = "Type here ...">
+                </div>
+                <div class = "field">
+                    <label class = "ui large label"> 請購金額: </label>
+                    <input type = "text" id = "buy_money">
+                </div>
+                <div class = "field">
+                    <label class = "ui large label"> 傳票號碼: </label>
+                    <input type = "text" id = "ticket_num" placeholder = "Type here ...">
+                </div>
+                <div class = "field">
+                    <div class = "ui fluid large blue basic animated vertical button" id = "report_save"> 
+                        <div class = "visible content">存檔</div>
+                        <div class = "hidden content">
+                            <i class = "save icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div class = "ui inverted vertical footer center aligned segment">
+            <p>&copy; 國立成功大學 教學發展中心 All rights reserved. | Semantic UI </p>
+        </div>
+
+        <!-- modal
+        ========================================-->
+
+        <!-- year
+        ====================================-->
+        
+        <div class = "ui modal" id = "year_modal">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "edit icon"></i>
+                編輯
+            </div>
+            <div class = "content">
+                <p> 修改後請存檔 </p>
+            </div>
+            <table id = "year_table" class = "ui fixed table">
+                <thead>
+                    <tr>
+                        <th class = "twelve wide"> 項目 </th>
+                        <th class = "four wide"> 動作 </th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class = "ui input">
+                <input type = "text" id = "add_year_input" placeholder = "Add item..." style = "width:500px">
+                <div class = "ui blue basic animated button" id = "add_year">
+                    <div class = "visible content"> 加入 </div>
+                    <div class = "hidden content">
+                        <i class = "add icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class = "actions">
+                <div class = "ui green basic ok animated vertical button" id = "year_save">
+                    <div class = "visible content"> 存檔 </div>
+                    <div class = "hidden content">
+                        <i class = "save icon"></i>
+                    </div>
+                </div>
+                <div class = "ui red basic cancel animated vertical button" id = "year_close">
+                    <div class = "visible content"> 關閉 </div>
+                    <div class = "hidden content">
+                        <i class = "remove icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class = "ui modal" id = "check_year">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "save icon"></i>
+                確認存檔
+            </div>
+            <div class = "content">
+                <p> 確定存檔? </p>
+            </div>
+            <div class = "actions">
+                <div class = "ui large green basic ok animated vertical button" id = "year_ok">
+                    <div class = "visible content"> 是 </div>
+                    <div class = "hidden content">
+                        <i class = "checkmark icon"></i>
+                    </div>
+                </div>
+                <div class = "ui large red basic cancel animated vertical button" id = "year_cancel">
+                    <div class = "visible content"> 否 </div>
+                    <div class = "hidden content">
+                        <i class = "remove icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- number
+        ====================================-->
+        
+        <div class = "ui modal" id = "number_modal">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "edit icon"></i>
+                編輯
+            </div>
+            <div class = "content">
+                <p> 修改後請存檔 </p>
+            </div>
+            <table id = "number_table" class = "ui fixed table">
+                <thead>
+                    <tr>
+                        <th class = "twelve wide"> 項目 </th>
+                        <th class = "four wide"> 動作 </th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class = "ui input">
+                <input type = "text" id = "add_number_input" placeholder = "Add item..." style = "width:500px">
+                <div class = "ui blue basic animated button" id = "add_number">
+                    <div class = "visible content"> 加入 </div>
+                    <div class = "hidden content">
+                        <i class = "add icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class = "actions">
+                <div class = "ui green basic ok animated vertical button" id = "number_save">
+                    <div class = "visible content"> 存檔 </div>
+                    <div class = "hidden content">
+                        <i class = "save icon"></i>
+                    </div>
+                </div>
+                <div class = "ui red basic cancel animated vertical button" id = "number_close">
+                    <div class = "visible content"> 關閉 </div>
+                    <div class = "hidden content">
+                        <i class = "remove icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class = "ui modal" id = "check_number">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "save icon"></i>
+                確認存檔
+            </div>
+            <div class = "content">
+                <p> 確定存檔? </p>
+            </div>
+            <div class = "actions">
+                <div class = "ui large green basic ok animated vertical button" id = "number_ok">
+                    <div class = "visible content"> 是 </div>
+                    <div class = "hidden content">
+                        <i class = "checkmark icon"></i>
+                    </div>
+                </div>
+                <div class = "ui large red basic cancel animated vertical button" id = "number_cancel">
+                    <div class = "visible content"> 否 </div>
+                    <div class = "hidden content">
+                        <i class = "remove icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- use
+        ====================================-->
+
+        <div class = "ui modal" id = "use_modal">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "edit icon"></i>
+                編輯
+            </div>
+            <div class = "content">
+                <p> 修改後請存檔 </p>
+            </div>
+            <table id = "use_table" class = "ui fixed table">
+                <thead>
+                    <tr>
+                        <th class = "twelve wide"> 項目 </th>
+                        <th class = "four wide"> 動作 </th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class = "ui input">
+                <input type = "text" id = "add_use_input" placeholder = "Add item..." style = "width:500px">
+                <div class = "ui blue basic animated button" id = "add_use">
+                    <div class = "visible content"> 加入 </div>
+                    <div class = "hidden content">
+                        <i class = "add icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class = "actions">
+                <div class = "ui green basic ok animated vertical button" id = "use_save">
+                    <div class = "visible content"> 存檔 </div>
+                    <div class = "hidden content">
+                        <i class = "save icon"></i>
+                    </div>
+                </div>
+                <div class = "ui red basic cancel animated vertical button" id = "use_close">
+                    <div class = "visible content"> 關閉 </div>
+                    <div class = "hidden content">
+                        <i class = "remove icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class = "ui modal" id = "check_use">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "save icon"></i>
+                確認存檔
+            </div>
+            <div class = "content">
+                <p> 確定存檔? </p>
+            </div>
+            <div class = "actions">
+                <div class = "ui large green basic ok animated vertical button" id = "use_ok">
+                    <div class = "visible content"> 是 </div>
+                    <div class = "hidden content">
+                        <i class = "checkmark icon"></i>
+                    </div>
+                </div>
+                <div class = "ui large red basic cancel animated vertical button" id = "use_cancel">
+                    <div class = "visible content"> 否 </div>
+                    <div class = "hidden content">
+                        <i class = "remove icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- buy
+        ====================================-->
+        
+        <div class = "ui modal" id = "buy_modal">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "edit icon"></i>
+                編輯
+            </div>
+            <div class = "content">
+                <p> 修改後請存檔 </p>
+            </div>
+            <table id = "buy_table" class = "ui fixed table">
+                <thead>
+                    <tr>
+                        <th class = "twelve wide"> 項目 </th>
+                        <th class = "four wide"> 動作 </th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class = "ui input">
+                <input type = "text" id = "add_buy_input" placeholder = "Add item..." style = "width:500px">
+                <div class = "ui blue basic animated button" id = "add_buy">
+                    <div class = "visible content"> 加入 </div>
+                    <div class = "hidden content">
+                        <i class = "add icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class = "actions">
+                <div class = "ui green basic ok animated vertical button" id = "buy_save">
+                    <div class = "visible content"> 存檔 </div>
+                    <div class = "hidden content">
+                        <i class = "save icon"></i>
+                    </div>
+                </div>
+                <div class = "ui red basic cancel animated vertical button" id = "buy_close">
+                    <div class = "visible content"> 關閉 </div>
+                    <div class = "hidden content">
+                        <i class = "remove icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <div class = "ui modal" id = "check_buy">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "save icon"></i>
+                確認存檔
+            </div>
+            <div class = "content">
+                <p> 確定存檔? </p>
+            </div>
+            <div class = "actions">
+                <div class = "ui large green basic ok animated vertical button" id = "buy_ok">
+                    <div class = "visible content"> 是 </div>
+                    <div class = "hidden content">
+                        <i class = "checkmark icon"></i>
+                    </div>
+                </div>
+                <div class = "ui large red basic cancel animated vertical button" id = "buy_cancel">
+                    <div class = "visible content"> 否 </div>
+                    <div class = "hidden content">
+                        <i class = "remove icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- others
+        ====================================-->
+        
+        <div class = "ui modal" id = "check_report">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "save icon"></i>
+                確認存檔
+            </div>
+            <div class = "content">
+                <p> 確定存檔? </p>
+            </div>
+            <div class = "actions">
+                <div class = "ui large green basic ok animated vertical button" id = "report_ok">
+                    <div class = "visible content"> 是 </div>
+                    <div class = "hidden content">
+                        <i class = "checkmark icon"></i>
+                    </div>
+                </div>
+                <div class = "ui large red basic cancel animated vertical button" id = "cancel">
+                    <div class = "visible content"> 否 </div>
+                    <div class = "hidden content">
+                        <i class = "remove icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class = "ui modal" id = "success">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "checkmark icon"></i>
+                存檔成功
+            </div>
+        </div>
+
+        <div class = "ui modal" id = "failed">
+            <i class = "close icon"></i>
+            <div class = "ui icon header">
+                <i class = "warning sign icon"></i>
+                存檔失敗
+            </div>
+        </div>
+
+        <script src = "./assets/report.js"></script>
+    </body>
+</HTML>
